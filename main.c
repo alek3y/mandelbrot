@@ -23,15 +23,15 @@ bool is_inside_mandelbrot(double complex c) {
 	return true;
 }
 
-#define RESOLUTION 100
-#define HEIGHT_SCALE 1/2.5
+#define RES_WIDTH 100
+#define RES_HEIGHT 40
 
-int main() {
+int main(int argc, char *argv[]) {
 	const double complex top_left = -2 + 1*I;
 	const double complex bottom_right = 0.5 + -1*I;
 
-	double r_step = (creal(bottom_right) - creal(top_left)) / ((double) RESOLUTION);
-	double i_step = (cimag(top_left) - cimag(bottom_right)) / ((double) RESOLUTION * HEIGHT_SCALE);
+	double r_step = (creal(bottom_right) - creal(top_left)) / (double) RES_WIDTH;
+	double i_step = (cimag(top_left) - cimag(bottom_right)) / (double) RES_HEIGHT;
 
 	for (double i = cimag(top_left); i > cimag(bottom_right); i -= i_step) {
 		for (double r = creal(top_left); r < creal(bottom_right); r += r_step) {

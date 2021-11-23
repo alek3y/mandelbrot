@@ -1,5 +1,5 @@
 CC := cc
-FLAGS := -std=c99 -Wall -Werror
+FLAGS := -std=c99 -pedantic -Wall -Werror
 LIBS :=
 
 SRC := main.c

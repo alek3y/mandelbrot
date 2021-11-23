@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <complex.h>
 #include <string.h>
+#include <stdint.h>
 
 // https://en.wikipedia.org/wiki/Mandelbrot_set#Formal_definition
 double complex mandelbrot(double complex z, double complex c) {
@@ -81,9 +82,9 @@ int main(int argc, char *argv[]) {
 				fprintf(output, "%s", inside ? "*" : " ");
 			} else {
 				if (!inside) {
-					fwrite((char[]) {255, 255, 255}, 1, 3, output);
+					fwrite((uint8_t[]) {255, 255, 255}, 1, 3, output);
 				} else {
-					fwrite((char[]) {0, 0, 0}, 1, 3, output);
+					fwrite((uint8_t[]) {0, 0, 0}, 1, 3, output);
 				}
 			}
 		}

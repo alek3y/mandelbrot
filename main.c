@@ -8,20 +8,20 @@ double complex mandelbrot(double complex z, double complex c) {
 	return (z*z) + c;
 }
 
-bool is_inside_mandelbrot(double complex c) {
+size_t mandelbrot_steps_to_inf(double complex c) {
 	const size_t max_radius = 2;	// https://en.wikipedia.org/wiki/Mandelbrot_set#Basic_properties
 	const size_t max_iterations = 1000;
 
 	double complex z = 0;
 	for (size_t i = 0; i < max_iterations; i++) {
 		if (creal(z) > max_radius || cimag(z) > max_radius) {
-			return false;
+			return i;
 		}
 
 		z = mandelbrot(z, c);
 	}
 
-	return true;
+	return 0;
 }
 
 #define DEFAULT_RES_WIDTH 100
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 	bool is_output_tty = output == stdout || output == stderr;
 
 	if (!is_output_tty) {
-		fprintf(output, "P1\n%lu %lu\n", width, height);	// PBM format (https://en.wikipedia.org/wiki/Netpbm#Description)
+		fprintf(output, "P6\n%lu %lu\n255\n", width, height);	// PPM format (https://en.wikipedia.org/wiki/Netpbm#Description)
 	}
 
 	double r_step = (creal(bottom_right) - creal(top_left)) / (double) width;
@@ -75,13 +75,22 @@ int main(int argc, char *argv[]) {
 	for (double i = cimag(top_left), y = 0; y < height; i -= i_step, y++) {
 		for (double r = creal(top_left), x = 0; x < width; r += r_step, x++) {
 			double complex point = r + i*I;
-			bool inside = is_inside_mandelbrot(point);
+			bool inside = mandelbrot_steps_to_inf(point) == 0;
 
-			fprintf(output, "%s",
-				is_output_tty ? (inside ? "*" : " ") : (inside ? "1" : "0")
-			);
+			if (is_output_tty) {
+				fprintf(output, "%s", inside ? "*" : " ");
+			} else {
+				if (!inside) {
+					fwrite((char[]) {255, 255, 255}, 1, 3, output);
+				} else {
+					fwrite((char[]) {0, 0, 0}, 1, 3, output);
+				}
+			}
 		}
-		fprintf(output, "\n");
+
+		if (is_output_tty) {
+			fprintf(output, "\n");
+		}
 	}
 
 	fclose(output);

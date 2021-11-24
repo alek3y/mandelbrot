@@ -18,9 +18,9 @@ double rgb_from_hsv_f(double n, struct hsv color) {
 
 struct rgb rgb_from_hsv(struct hsv hsv_color) {
 	struct rgb rgb_color;
-	rgb_color.r = rgb_from_hsv_f(5, hsv_color) * 255;
-	rgb_color.g = rgb_from_hsv_f(3, hsv_color) * 255;
-	rgb_color.b = rgb_from_hsv_f(1, hsv_color) * 255;
+	rgb_color.r = round(rgb_from_hsv_f(5, hsv_color) * 255);
+	rgb_color.g = round(rgb_from_hsv_f(3, hsv_color) * 255);
+	rgb_color.b = round(rgb_from_hsv_f(1, hsv_color) * 255);
 
 	return rgb_color;
 }

@@ -3,8 +3,8 @@
 #include <complex.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 #include "mandelbrot.h"
-
 
 #define DEFAULT_RES_WIDTH 100
 #define DEFAULT_RES_HEIGHT 40
@@ -57,16 +57,13 @@ int main(int argc, char *argv[]) {
 	for (double i = cimag(top_left), y = 0; y < height; i -= i_step, y++) {
 		for (double r = creal(top_left), x = 0; x < width; r += r_step, x++) {
 			double complex point = r + i*I;
-			bool inside = mandelbrot_steps_to_inf(point) == 0;
+			size_t steps = mandelbrot_steps_inf(point);
 
 			if (is_output_tty) {
-				fprintf(output, "%s", inside ? "*" : " ");
+				fprintf(output, "%s", steps == 0 ? "*" : " ");
 			} else {
-				if (!inside) {
-					fwrite((uint8_t[]) {255, 255, 255}, 1, 3, output);
-				} else {
-					fwrite((uint8_t[]) {0, 0, 0}, 1, 3, output);
-				}
+				struct rgb color = mandelbrot_steps_to_rgb(steps);
+				fwrite(&color, sizeof(struct rgb), 1, output);
 			}
 		}
 

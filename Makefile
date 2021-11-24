@@ -1,6 +1,6 @@
 CC := cc
 FLAGS := -std=c99 -pedantic -Wall -Werror
-LIBS :=
+LIBS := -lm
 
 SRC := main.c
 DEST := mandelbrot
